@@ -1,44 +1,31 @@
 
-const int trigPin = 5;
-const int echoPin = 18;
+// Fill-in information from your Blynk Template here
+#define BLYNK_TEMPLATE_ID "xxxxx"
+#define BLYNK_DEVICE_NAME "xxxxx"
 
-//define sound speed in cm/uS
-#define SOUND_SPEED 0.034
-#define CM_TO_INCH 0.393701
+#define BLYNK_FIRMWARE_VERSION        "0.1.0"
 
-long duration;
-float distanceCm;
-float distanceInch;
+#define BLYNK_PRINT Serial
+//#define BLYNK_DEBUG
 
-void setup() {
-  Serial.begin(115200); // Starts the serial communication
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+#define APP_DEBUG
+
+// Uncomment your board, or configure a custom board in Settings.h
+//#define USE_WROVER_BOARD
+//#define USE_TTGO_T7
+//#define USE_ESP32C3_DEV_MODULE
+//#define USE_ESP32S2_DEV_KIT
+
+#include "BlynkEdgent.h"
+
+void setup()
+{
+  Serial.begin(115200);
+  delay(100);
+
+  BlynkEdgent.begin();
 }
 
 void loop() {
-  // Clears the trigPin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  
-  // Calculate the distance
-  distanceCm = duration * SOUND_SPEED/2;
-  
-  // Convert to inches
-  distanceInch = distanceCm * CM_TO_INCH;
-  
-  // Prints the distance in the Serial Monitor
-  Serial.print("Distance (cm): ");
-  Serial.println(distanceCm);
-  Serial.print("Distance (inch): ");
-  Serial.println(distanceInch);
-  
-  delay(1000);
+  BlynkEdgent.run();
 }
