@@ -1,13 +1,18 @@
 //Conf Blynk
-#define BLYNK_TEMPLATE_ID "xxxxx"
+#define BLYNK_TEMPLATE_ID "xxxxxx"
 #define BLYNK_DEVICE_NAME "xxxxx"
 
 //Library
-#define BLYNK_FIRMWARE_VERSION        "0.1.0"
 #define BLYNK_PRINT Serial
-#define APP_DEBUG
-#define USE_ESP32C3_DEV_MODULE
-#include "BlynkEdgent.h"
+
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <BlynkSimpleEsp32.h>
+
+char auth[] = "xxxxx";
+
+char ssid[] = "xxxx";
+char pass[] = "xxxx";
 
 //Ultrasonic
 const int trigPin = 5;
@@ -20,29 +25,29 @@ float distance;
 
 BLYNK_WRITE(V0) {
   int pinValue = param.asInt();
-  digitalWrite(0,pinValue);
+  digitalWrite(15, pinValue);
 }
 
 BLYNK_READ(V1) //Blynk app has something on V5
 {
-  sensorData = distance; //reading the sensor on A0
-  Blynk.virtualWrite(V1, sensorData); //sending to Blynk
+  Blynk.virtualWrite(V1, random(200)); //sending to Blynk
 }
 
 void setup()
 {
-  pinMode(0, OUTPUT);
+  pinMode(15, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   
   Serial.begin(115200);
   delay(100);
 
-  BlynkEdgent.begin();
+  Blynk.begin(auth, ssid, pass);
 }
 
 void loop() {
-  BlynkEdgent.run();
+  Blynk.run();
+  Blynk.virtualWrite(V1, distance);
 
   //Pulses
   digitalWrite(trigPin, LOW);
