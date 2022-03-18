@@ -1,35 +1,37 @@
-
-// Fill-in information from your Blynk Template here
+//Conf Blynk
 #define BLYNK_TEMPLATE_ID "xxxxx"
 #define BLYNK_DEVICE_NAME "xxxxx"
 
+//Library
 #define BLYNK_FIRMWARE_VERSION        "0.1.0"
-
 #define BLYNK_PRINT Serial
-//#define BLYNK_DEBUG
-
 #define APP_DEBUG
-
-// Uncomment your board, or configure a custom board in Settings.h
-//#define USE_WROVER_BOARD
-//#define USE_TTGO_T7
-//#define USE_ESP32C3_DEV_MODULE
-//#define USE_ESP32S2_DEV_KIT
-
+#define USE_ESP32C3_DEV_MODULE
 #include "BlynkEdgent.h"
 
+//Ultrasonic
 const int trigPin = 5;
 const int echoPin = 18;
-
-#define SOUND_SPEED 0.034
-#define CM_TO_INCH 0.393701
-
+//Variable and Constant
+#define k 0.034
 long duration;
-float distanceCm;
-float distanceInch;
+float distance;
+
+
+BLYNK_WRITE(V0) {
+  int pinValue = param.asInt();
+  digitalWrite(0,pinValue);
+}
+
+BLYNK_READ(V1) //Blynk app has something on V5
+{
+  sensorData = distance; //reading the sensor on A0
+  Blynk.virtualWrite(V1, sensorData); //sending to Blynk
+}
 
 void setup()
 {
+  pinMode(0, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   
@@ -41,22 +43,23 @@ void setup()
 
 void loop() {
   BlynkEdgent.run();
+
+  //Pulses
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // Calculate the distance
-  distanceCm = duration * SOUND_SPEED/2;
+  //Duration
+  duration = pulseIn(echoPin, HIGH);
+  //Distance
+  //distance = duration * k/2;
+
+  //random for demo
+  distance = random(200);
   
-  // Convert to inches
-  distanceInch = distanceCm * CM_TO_INCH;
-  
-  // Prints the distance in the Serial Monitor
-  Serial.print("Distance (cm): ");
-  Serial.println(distanceCm);
-  Serial.print("Distance (inch): ");
-  Serial.println(distanceInch);
+  //print
+  Serial.print("ketinggian");
+  Serial.println(distance);
 }
