@@ -68,6 +68,8 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
   //Distance
   distance = duration * k/2;
+  Serial.print("sebelummap");
+  Serial.println(distance);
   distance = map(distance,30,0,0,100);
   
   if(distance < 20){
@@ -76,11 +78,11 @@ void loop() {
   if(distance>=80){
     state = 0;
   }
-  if(state ==1&&distance<20){
+  if(state ==1){
     digitalWrite(relay, HIGH);
     Blynk.virtualWrite(V2, HIGH);
   }
-  if(state == 0&&distance>80){
+  if(state == 0){
     digitalWrite(relay, LOW);
     Blynk.virtualWrite(V2, LOW);
   }
